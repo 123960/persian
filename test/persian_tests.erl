@@ -53,3 +53,6 @@ Clients = lists:seq(1, 10).
 Msgs = lists:seq(1, 100).
 X = lists:flatmap(fun(C) -> [{C, M} || M <- Msgs] end, Clients).
 [persian_qu_server:sync_enqueue(Pid, C, M) || {C, M} <- X].
+
+
+{ok, Pid} = elli:start_link([{callback, persian_http_api_server}, {port, 3000}]).
