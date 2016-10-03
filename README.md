@@ -1,11 +1,10 @@
 # Persian:
--Async process
--Cache
--Serialization per client
--Event Logging
--Monitoring/Stats
+* Async process
+* Cache
+* Serialization per client
+* Event Logging
+* Monitoring/Stats
 
 # Provided by Erlang:
--No downtime
--Hot deploy
--Scalability
+* Fault Tolerance + Hot deploy = No downtime
+* Functional + Async + Actors + Distributed = Scalability
