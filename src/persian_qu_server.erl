@@ -5,11 +5,13 @@
          sync_enqueue/3, sync_get_msgs/2, sync_dequeue/2, async_dequeue/2]).
 
 init([]) ->
-  io:format("[persian_qu_server] - Iniciando qu_server.\n"), 
+  io:format("[persian_qu_server] - Iniciando qu_server.\n"),
   persian_event_server:start(),
-  {ok, []}.
+  {ok, orddict:new()}.
 
-%%------------------------- Module API ---------------------------------
+%%====================================================================
+%% API functions
+%%====================================================================
 start()                        -> gen_server:start_link({local, persian_qu_server}, ?MODULE, [], []).
 stop(Pid)                      -> gen_server:call(Pid, {terminate}).
 sync_enqueue(Pid, Client, Msg) -> gen_server:call(Pid, {enq, Client, Msg}).
@@ -17,6 +19,9 @@ sync_get_msgs(Pid, Client)     -> gen_server:call(Pid, {get, Client}).
 sync_dequeue(Pid, Client)      -> gen_server:call(Pid, {deq, Client}).
 async_dequeue(Pid, Client)     -> gen_server:cast(Pid, {deq, Client}).
 
+%%====================================================================
+%% Callback Handlers
+%%====================================================================
 %%--------------------- Enqueue handle_call ----------------------------
 handle_call({enq, Client, Msg}, _From, []) ->
   self() ! {enq, Client, Msg},
@@ -77,7 +82,9 @@ terminate(normal, _MapQueue) ->
   io:format("[persian_qu_server] - Encerrando qu_server.\n"),
   ok.
 
-%%--------------------- Private functions -------------------------------
+%%====================================================================
+%% Internal functions
+%%====================================================================
 %%---- ENQUEUE ------------------------------------
 enqueue(Msg, [])    -> queue:in(Msg, queue:new());
 enqueue(Msg, Queue) -> queue:in(Msg, Queue).
