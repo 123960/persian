@@ -23,3 +23,10 @@ EPid = whereis(persian_event_server).
 persian_event_server:get_all_msgs(EPid).
 persian_event_server:get_client_msgs(EPid, "client2").
 persian_event_server:get_msg(EPid, "client1", "msg1").
+
+erl -pa _build/default/lib/*/ebin
+
+persian_supersup:start_link().
+supervisor:which_children(persian_qu_server_sup).
+
+Pid = whereis(persian_qu_server).

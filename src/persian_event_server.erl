@@ -3,7 +3,7 @@
 -import(persian_qu_server, [async_dequeue/2]).
 
 -export([init/1, handle_cast/2, handle_call/3, handle_info/2, code_change/3,
-         terminate/2, start/0, stop/1, get_all_msgs/1, get_client_msgs/2, get_msg/3,
+         terminate/2, start_link/0, stop/1, get_all_msgs/1, get_client_msgs/2, get_msg/3,
          notify_new_msg/2, notify_no_msg/2, process_msg/3]).
 
 init([]) ->
@@ -13,7 +13,7 @@ init([]) ->
 %%====================================================================
 %% API functions
 %%====================================================================
-start()                        -> gen_server:start_link({local, persian_event_server}, ?MODULE, [], []).
+start_link()                   -> gen_server:start_link({local, persian_event_server}, ?MODULE, [], []).
 stop(Pid)                      -> gen_server:call(Pid, {terminate}).
 get_all_msgs(Pid)              -> gen_server:call(Pid, {get_all_msgs}).
 get_client_msgs(Pid, Client)   -> gen_server:call(Pid, {get_client_msgs, Client}).

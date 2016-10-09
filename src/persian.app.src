@@ -1,0 +1,16 @@
+{application, persian,
+ [{description, "Persian - An integration layer in queue format for internal use"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { persian_app, []}},
+  {applications,
+   [kernel,
+    stdlib
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {maintainers, ["vinicius.a.ribeiro"]},
+  {licenses, []},
+  {links, []}
+ ]}.

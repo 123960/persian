@@ -1,18 +1,21 @@
+%%%-------------------------------------------------------------------
+%% @doc persian qu_server.
+%% @end
+%%%-------------------------------------------------------------------
 -module(persian_qu_server).
 -behaviour(gen_server).
 -import(persian_event_server, [notify_new_msg/2, notify_no_msg/2, process_msg/3]).
--export([init/1, terminate/2, start/0, code_change/3, handle_call/3, handle_cast/2, handle_info/2, stop/1,
+-export([init/1, terminate/2, start_link/0, code_change/3, handle_call/3, handle_cast/2, handle_info/2, stop/1,
          sync_enqueue/3, sync_get_msgs/2, sync_dequeue/2, async_dequeue/2]).
 
 init([]) ->
   io:format("[persian_qu_server] - Iniciando qu_server.\n"),
-  persian_event_server:start(),
   {ok, orddict:new()}.
 
 %%====================================================================
 %% API functions
 %%====================================================================
-start()                        -> gen_server:start_link({local, persian_qu_server}, ?MODULE, [], []).
+start_link()                   -> gen_server:start_link({local, persian_qu_server}, ?MODULE, [], []).
 stop(Pid)                      -> gen_server:call(Pid, {terminate}).
 sync_enqueue(Pid, Client, Msg) -> gen_server:call(Pid, {enq, Client, Msg}).
 sync_get_msgs(Pid, Client)     -> gen_server:call(Pid, {get, Client}).
