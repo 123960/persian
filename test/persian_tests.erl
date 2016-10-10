@@ -28,5 +28,8 @@ erl -pa _build/default/lib/*/ebin
 
 persian_supersup:start_link().
 supervisor:which_children(persian_qu_server_sup).
+{ok, Pid} = elli:start_link([{callback, persian_http_api_server}, {port, 3000}]).
 
 Pid = whereis(persian_qu_server).
+
+erl -pa _build\default\lib\elli\ebin _build\default\lib\persian\ebin
