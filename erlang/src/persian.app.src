@@ -9,8 +9,14 @@
    ]},
   {env,[]},
   {modules, []},
-
   {maintainers, ["vinicius.a.ribeiro"]},
   {licenses, []},
-  {links, []}
+  {links, []},
+  {lager, [
+     {log_root, "/home/vinicius/workspace/persian/erlang/logs"},
+     {handlers, [
+       {lager_file_backend, [{file, "persian_error.log"}, {level, error}]},
+       {lager_file_backend, [{file, "persian_console.log"}, {level, info}]}
+     ]}
+   ]}
  ]}.

@@ -46,17 +46,17 @@ handle_cast({process_msg, Client, {MsgId, Msg}}, State) ->
     []    -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Cache vazio, enviando mensagem...~n", [MsgId]),
              process_event(Client, MsgId, Msg),
              request_new_msg(Client),
-             {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok}], orddict:new()), State)};
+             {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok, get_timestamp()}], orddict:new()), State)};
     _else -> case orddict:find(Client, State) of
                error      -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Nao ha mensagens para o cliente, enviando mensagem...~n", [MsgId]),
                              process_event(Client, MsgId, Msg),
                              request_new_msg(Client),
-                             {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok}], orddict:new()), State)};
+                             {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok, get_timestamp()}], orddict:new()), State)};
                {ok, Msgs} -> case orddict:find(MsgId, Msgs) of
                                error   -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Mensagen nao processada, enviando mensagem...~n", [MsgId]),
                                           process_event(Client, MsgId, Msg),
                                           request_new_msg(Client),
-                                          {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok}], Msgs), State)};
+                                          {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok, get_timestamp()}], Msgs), State)};
                                {ok, _} -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Mensagen ja processada.~n", [MsgId]),
                                           request_new_msg(Client),
                                           {noreply, State}
@@ -79,7 +79,7 @@ handle_cast({store_resp, Client, MsgId, _Resp}, State) ->
                                  {noreply, State};
                                {ok, MsgInfo} ->
                                  io:format("[persian_event_server][process_msg][MsgId:[~p]] - Registrando resposta.~n", [MsgId]),
-                                 {noreply, orddict:store(Client, orddict:store(MsgId, lists:append(MsgInfo, [{resp, ok}]), Msgs), State)}
+                                 {noreply, orddict:store(Client, orddict:store(MsgId, lists:append(MsgInfo, [{resp, ok, get_timestamp()}]), Msgs), State)}
                              end
              end
   end.
@@ -132,3 +132,6 @@ request_new_msg(Client) ->
   persian_qu_server:async_dequeue(whereis(persian_qu_server), Client).
 process_event(Client, MsgId, Msg) ->
   persian_httpc_acm_server:process_event(whereis(persian_httpc_acm_server), Client, MsgId, Msg).
+get_timestamp() ->
+  {Mega, Sec, Micro} = os:timestamp(),
+  (Mega*1000000 + Sec)*1000 + round(Micro/1000).
