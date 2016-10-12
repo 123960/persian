@@ -1,4 +1,4 @@
--module(persian_http_api_server).
+-module(persian_httpd_api_server).
 -export([handle/2, handle_event/3]).
 -import(persian_qu_server, [sync_enqueue/3, sync_get_msgs/2]).
 -include_lib("elli/include/elli.hrl").
@@ -9,8 +9,8 @@ handle(Req, _Args) ->
   handle(Req#req.method, elli_request:path(Req), Req).
 
 handle('GET',[<<"persian">>, <<"helloworld">>], _Req) ->
-  %% Reply with a normal response. 'ok' can be used instead of '200'
-  %% to signal success.
+  {ok, [], <<"Hello World!">>};
+handle('POST',[<<"persian">>, <<"helloworld">>], _Req) ->
   {ok, [], <<"Hello World!">>};
 
 handle('POST',[<<"persian">>, <<"enqueue">>], Req) ->

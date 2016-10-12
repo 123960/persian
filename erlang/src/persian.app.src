@@ -2,7 +2,7 @@
  [{description, "Persian - An integration layer in queue format for internal use"},
   {vsn, "0.1.0"},
   {registered, []},
-  {mod, { persian_app, []}},
+  {mod, { persian, []}},
   {applications,
    [kernel,
     stdlib

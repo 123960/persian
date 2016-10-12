@@ -70,7 +70,7 @@ handle_cast({deq, Client}, MapQueue) ->
 
 %%--------------------- handle_info -------------------------------------
 handle_info(Msg, MapQueue) ->
-  io:format("[persian_qu_server] - Receive message: ~p~n",[Msg]),
+  io:format("[persian_qu_server][Msg:[~p]] - Receive message.~n",[Msg]),
   {noreply, MapQueue}.
 
 %%--------------------- CODE_CHANGE handle ------------------------------
@@ -80,9 +80,9 @@ code_change(PreviousVersion, State, Extra) ->
 
 %%--------------------- terminate  --------------------------------------
 terminate(normal, _MapQueue) ->
-  io:format("[persian_qu_server] - Solicitando a parada do event_server...\n"),
+  io:format("[persian_qu_server] - Solicitando a parada do event_server...~n"),
   persian_event_server:stop(whereis(persian_event_server)),
-  io:format("[persian_qu_server] - Encerrando qu_server.\n"),
+  io:format("[persian_qu_server] - Encerrando qu_server.~n"),
   ok.
 
 %%====================================================================

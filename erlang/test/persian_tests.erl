@@ -24,8 +24,8 @@ persian_event_server:get_all_msgs(EPid).
 persian_event_server:get_client_msgs(EPid, "client2").
 persian_event_server:get_msg(EPid, "client1", "msg1").
 
-erl -pa _build/default/lib/*/ebin
-
+application:start(persian).
+application:stop(persian).
 persian_supersup:start_link().
 supervisor:which_children(persian_qu_server_sup).
 {ok, Pid} = elli:start_link([{callback, persian_http_api_server}, {port, 3000}]).
@@ -33,3 +33,9 @@ supervisor:which_children(persian_qu_server_sup).
 Pid = whereis(persian_qu_server).
 
 erl -pa _build\default\lib\elli\ebin _build\default\lib\persian\ebin
+erl -pa _build/default/lib/*/ebin
+
+http://127.0.0.1:3000/persian/enqueue?msgId=1&client=1
+
+application:start(persian).
+application:stop(persian).
