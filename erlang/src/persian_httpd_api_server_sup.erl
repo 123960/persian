@@ -27,7 +27,7 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-  io:format("[persian_httpd_api_server_sup] - Iniciando persian_httpd_api_server na porta 3000.\n"),
+  io:format("- Starting persian_httpd_api_server on port 3000"),
   ElliOpts = [{callback, persian_httpd_api_server}, {port, 3000}],
   {ok, { {one_for_one, 5, 5}, [{httpd_api_server1,
                                 {elli, start_link, [ElliOpts]},

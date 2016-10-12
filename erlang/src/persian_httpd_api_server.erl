@@ -1,4 +1,5 @@
 -module(persian_httpd_api_server).
+-compile([{parse_transform, lager_transform}]).
 -export([handle/2, handle_event/3]).
 -import(persian_qu_server, [sync_enqueue/3, sync_get_msgs/2]).
 -include_lib("elli/include/elli.hrl").

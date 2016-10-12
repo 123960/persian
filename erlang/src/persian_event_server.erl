@@ -1,13 +1,13 @@
 -module(persian_event_server).
 -behaviour(gen_server).
+-compile([{parse_transform, lager_transform}]).
 -import(persian_qu_server, [async_dequeue/2]).
-
 -export([init/1, handle_cast/2, handle_call/3, handle_info/2, code_change/3,
          terminate/2, start_link/0, stop/1, get_all_msgs/1, get_client_msgs/2, get_msg/3,
          notify_new_msg/2, notify_no_msg/2, process_msg/3, store_resp/4]).
 
 init([]) ->
-  io:format("[persian_event_server] - Iniciando event_server.~n"),
+  lager:info("- Starting persian_event_server"),
   {ok, []}.
 
 %%====================================================================
@@ -40,24 +40,24 @@ handle_cast({no_msg, Client}, State) ->
 %%--------------------- PROCESS_MSG handle_cast (async) --------------------
 handle_cast({process_msg, Client, {MsgId, Msg}}, State) ->
   self() ! {process_msg, Client},
-  io:format("[persian_event_server][process_msg][MsgId:[~p]] - Processando mensagem~n", [MsgId]),
-  io:format("[persian_event_server][process_msg][MsgId:[~p]] - Procurando mensagem no cache.~n", [MsgId]),
+  lager:info("- [MsgId:[~p]] - Processing message", [MsgId]),
+  lager:info("- [MsgId:[~p]] - Looking for the message in cache", [MsgId]),
   case State of
-    []    -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Cache vazio, enviando mensagem...~n", [MsgId]),
+    []    -> lager:info("- [MsgId:[~p]] - Cache is empty, sending message", [MsgId]),
              process_event(Client, MsgId, Msg),
              request_new_msg(Client),
              {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok, get_timestamp()}], orddict:new()), State)};
     _else -> case orddict:find(Client, State) of
-               error      -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Nao ha mensagens para o cliente, enviando mensagem...~n", [MsgId]),
+               error      -> lager:info("- [MsgId:[~p]] - There is no message in the cache to the client, sending message", [MsgId]),
                              process_event(Client, MsgId, Msg),
                              request_new_msg(Client),
                              {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok, get_timestamp()}], orddict:new()), State)};
                {ok, Msgs} -> case orddict:find(MsgId, Msgs) of
-                               error   -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Mensagen nao processada, enviando mensagem...~n", [MsgId]),
+                               error   -> lager:info("- [MsgId:[~p]] - Message not processed, sending message", [MsgId]),
                                           process_event(Client, MsgId, Msg),
                                           request_new_msg(Client),
                                           {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok, get_timestamp()}], Msgs), State)};
-                               {ok, _} -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Mensagen ja processada.~n", [MsgId]),
+                               {ok, _} -> lager:info("- [MsgId:[~p]] - Message already processed, nothing to do", [MsgId]),
                                           request_new_msg(Client),
                                           {noreply, State}
                              end
@@ -66,19 +66,19 @@ handle_cast({process_msg, Client, {MsgId, Msg}}, State) ->
 
 handle_cast({store_resp, Client, MsgId, _Resp}, State) ->
   self() ! {store_resp, Client},
-  io:format("[persian_event_server][store_resp][MsgId:[~p]|Client:[~p]] - Processando resposta para mensagem.~n", [MsgId, Client]),
+  lager:info("- [MsgId:[~p]|Client:[~p]] - Processing response for a message", [MsgId, Client]),
   case State of
-    []    -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Cache vazio, something is wrong...~n", [MsgId]),
+    []    -> lager:warning("- [MsgId:[~p]|Client:[~p]] - Cache is empty, something is wrong", [MsgId, Client]),
              {noreply, State};
     _else -> case orddict:find(Client, State) of
-               error      -> io:format("[persian_event_server][process_msg][MsgId:[~p]] - Nao ha mensagens para o cliente, something is wrong...~n", [MsgId]),
+               error      -> lager:warning("- [MsgId:[~p]|Client:[~p]] - There is no message of the client, something is wrong", [MsgId, Client]),
                              {noreply, State};
                {ok, Msgs} -> case orddict:find(MsgId, Msgs) of
                                error         ->
-                                 io:format("[persian_event_server][process_msg][MsgId:[~p]] - Mensagen nao processada, something is wrong...~n", [MsgId]),
+                                 lager:warning("- [MsgId:[~p]|Client:[~p]] - Unprocessed message, something is wrong", [MsgId, Client]),
                                  {noreply, State};
                                {ok, MsgInfo} ->
-                                 io:format("[persian_event_server][process_msg][MsgId:[~p]] - Registrando resposta.~n", [MsgId]),
+                                 lager:info("- [MsgId:[~p]|Client:[~p]] - Persisting response", [MsgId, Client]),
                                  {noreply, orddict:store(Client, orddict:store(MsgId, lists:append(MsgInfo, [{resp, ok, get_timestamp()}]), Msgs), State)}
                              end
              end
@@ -112,7 +112,7 @@ handle_call({terminate}, _From, State) ->
 
 %%--------------------- handle_info -------------------------------------
 handle_info(Msg, State) ->
-  io:format("[persian_event_server][Msg:[~p]] - Receive message.~n", [Msg]),
+  lager:info("- [msg:~p] - Receive message", [Msg]),
   {noreply, State}.
 
 %%--------------------- CODE_CHANGE handle ------------------------------
@@ -122,7 +122,7 @@ code_change(PreviousVersion, State, Extra) ->
 
 %%--------------------- terminate  --------------------------------------
 terminate(normal, _State) ->
-  io:format("[persian_event_server] - Encerrando event_server.~n"),
+  lager:info("- Stoping persian_event_server"),
   ok.
 
 %%====================================================================

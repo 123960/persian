@@ -4,12 +4,13 @@
 %%%-------------------------------------------------------------------
 -module(persian_qu_server).
 -behaviour(gen_server).
+-compile([{parse_transform, lager_transform}]).
 -import(persian_event_server, [notify_new_msg/2, notify_no_msg/2, process_msg/3]).
 -export([init/1, terminate/2, start_link/0, code_change/3, handle_call/3, handle_cast/2, handle_info/2, stop/1,
          sync_enqueue/3, sync_get_msgs/2, sync_dequeue/2, async_dequeue/2]).
 
 init([]) ->
-  io:format("[persian_qu_server] - Iniciando qu_server.\n"),
+  lager:info("- Starting persian_qu_server"),
   {ok, orddict:new()}.
 
 %%====================================================================
@@ -70,7 +71,7 @@ handle_cast({deq, Client}, MapQueue) ->
 
 %%--------------------- handle_info -------------------------------------
 handle_info(Msg, MapQueue) ->
-  io:format("[persian_qu_server][Msg:[~p]] - Receive message.~n",[Msg]),
+  lager:info("- [Msg:[~p]] - Receive message", [Msg]),
   {noreply, MapQueue}.
 
 %%--------------------- CODE_CHANGE handle ------------------------------
@@ -80,9 +81,9 @@ code_change(PreviousVersion, State, Extra) ->
 
 %%--------------------- terminate  --------------------------------------
 terminate(normal, _MapQueue) ->
-  io:format("[persian_qu_server] - Solicitando a parada do event_server...~n"),
   persian_event_server:stop(whereis(persian_event_server)),
-  io:format("[persian_qu_server] - Encerrando qu_server.~n"),
+  lager:info("- Requesting to stop persian_event_server"),
+  lager:info("- Stoping persian_qu_server"),
   ok.
 
 %%====================================================================
