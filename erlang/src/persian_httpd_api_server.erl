@@ -6,15 +6,39 @@
 -behaviour(elli_handler).
 
 handle(Req, _Args) ->
-  %% Delegate to our handler function
-  handle(Req#req.method, elli_request:path(Req), Req).
+%% Delegate to our handler function
+handle(Req#req.method, elli_request:path(Req), Req).
 
+%%====================================================================
+%% Helloworld operations
+%%====================================================================
 handle('GET',[<<"persian">>, <<"helloworld">>], _Req) ->
   {ok, [], <<"Hello World!">>};
 handle('POST',[<<"persian">>, <<"helloworld">>], _Req) ->
   {ok, [], <<"Hello World!">>};
 
-handle('POST',[<<"persian">>, <<"enqueue">>], Req) ->
+%%====================================================================
+%% GET sync_operations
+%%====================================================================
+handle('GET',[<<"persian">>, <<"sync">>, <<"get_pend_msgs">>], _Req) ->
+  {ok, [], <<"NOT IMPLEMENTED YET!">>};
+handle('GET',[<<"persian">>, <<"sync">>, <<"get_pend_msgs_of_client">>], _Req) ->
+  {ok, [], <<"NOT IMPLEMENTED YET!">>};
+handle('GET',[<<"persian">>, <<"sync">>, <<"get_processed_msgs">>], _Req) ->
+  {ok, [], <<"NOT IMPLEMENTED YET!">>};
+handle('GET',[<<"persian">>, <<"sync">>, <<"get_processed_msgs_of_client">>], _Req) ->
+  {ok, [], <<"NOT IMPLEMENTED YET!">>};
+handle('GET',[<<"persian">>, <<"sync">>, <<"get_error_msgs">>], _Req) ->
+  {ok, [], <<"NOT IMPLEMENTED YET!">>};
+handle('GET',[<<"persian">>, <<"sync">>, <<"get_error_msgs_of_client">>], _Req) ->
+  {ok, [], <<"NOT IMPLEMENTED YET!">>};
+handle('GET',[<<"persian">>, <<"sync">>, <<"get_msg">>], _Req) ->
+  {ok, [], <<"NOT IMPLEMENTED YET!">>};
+
+%%====================================================================
+%% POST sync_operations
+%%====================================================================
+handle('POST',[<<"persian">>, <<"sync">>, <<"enqueue">>], Req) ->
   Client = elli_request:get_arg(<<"client">>, Req, <<"undefined">>),
   MsgId  = elli_request:get_arg(<<"msgId">>, Req, <<"undefined">>),
   Msg    = elli_request:body(Req),

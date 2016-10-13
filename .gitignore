@@ -47,4 +47,6 @@ Temporary Items
 .apdisk
 
 *.beam
-_build/*
+*/_build/*
+*.log
+*.lock
