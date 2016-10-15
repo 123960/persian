@@ -2,7 +2,7 @@
 -behaviour(gen_server).
 -compile([{parse_transform, lager_transform}]).
 -export([init/1, handle_cast/2, handle_call/3, handle_info/2, code_change/3,
-         terminate/2, start_link/0, stop/1, process_event/4]).
+         terminate/2, start_link/0, stop/1, process_event/5]).
 
 -define(ACM_URL, "http://172.22.4.142:8080/genericadapter/GenericAdapter").
 
@@ -15,9 +15,10 @@ init([]) ->
 %%====================================================================
 %% API functions
 %%====================================================================
-start_link()                           -> gen_server:start_link({local, persian_httpc_acm_server}, ?MODULE, [], []).
-stop(Pid)                              -> gen_server:call(Pid, {terminate}).
-process_event(Pid, Client, MsgId, Msg) -> gen_server:call(Pid, {process_event, Client, MsgId, Msg}).
+start_link() -> gen_server:start_link({local, persian_httpc_acm_server}, ?MODULE, [], []).
+stop(Pid)    -> gen_server:call(Pid, {terminate}).
+process_event(Pid, Client, MsgId, Msg, Timeout) ->
+  gen_server:call(Pid, {process_event, Client, MsgId, Msg}, Timeout).
 
 %%====================================================================
 %% Callback Handlers
@@ -30,10 +31,11 @@ handle_cast({new_msg, Client}, State) ->
 %%--------------------- handle_call ----------------------------
 handle_call({process_event, Client, MsgId, Msg}, _From, State) ->
   lager:info("- [client:[~p]|msgid:[~p]] - Executing HTTP Request", [Client, MsgId]),
-  case httpc:request(post, {?ACM_URL, [], [], Msg}, [], []) of
+  case httpc:request(post, {?ACM_URL, [], [], Msg}, [{timeout, 10000}], []) of
     {ok, Result}    -> lager:info("- [client:[~p]|msgid:[~p]] - Response OK in HTTP Request, starting response treatment", [Client, MsgId]),
-                       send_resp(Client, MsgId, Result);
-    {error, Reason} -> lager:warning("- [client:[~p]|msgid:[~p]|reason:] - Response NOK in HTTP Request, but I have nothing to do", [Client, MsgId, Reason])
+                       send_resp(ok, Client, MsgId, Result);
+    {error, Reason} -> lager:warning("- [client:[~p]|msgid:[~p]|reason:] - Response NOK in HTTP Request, but I have nothing to do", [Client, MsgId, Reason]),
+                       send_resp(nok, Client, MsgId, Reason)
   end,
   {reply, State, State};
 
@@ -61,5 +63,5 @@ terminate(normal, _State) ->
 %%====================================================================
 %% Internal functions
 %%====================================================================
-send_resp(Client, MsgId, Resp) ->
-  persian_event_server:store_resp(whereis(persian_event_server), Client, MsgId, Resp).
+send_resp(Result, Client, MsgId, Resp) ->
+  persian_event_server:store_resp(whereis(persian_event_server), Result, Client, MsgId, Resp).

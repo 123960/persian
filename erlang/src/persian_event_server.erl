@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
 %% @doc persian event_server.
 %% State holds processed messages in a map by client and by msgid
-%% State = {[{Client1, [{MsgId1, [{Oper, Status, Content, OperTimestamp}]}, {MsgId2, [{Oper, Status, Content, OperTimestamp}]}...]},
-%%           {Client2, [{MsgId1, [{Oper, Status, Content, OperTimestamp}]}, {MsgId2, [{Oper, Status, Content, OperTimestamp}]}...]},
-%%              ...]}
+%% State = [{Client1, [{MsgId1, [{Oper, Status, Content, OperTimestamp}]}, {MsgId2, [{Oper, Status, Content, OperTimestamp}]}...]},
+%%          {Client2, [{MsgId1, [{Oper, Status, Content, OperTimestamp}]}, {MsgId2, [{Oper, Status, Content, OperTimestamp}]}...]},
+%%              ...]
 %% Oper   = [req, resp]
 %% Status = [ok, nok]
 %% @end
@@ -14,7 +14,7 @@
 -import(persian_qu_server, [async_dequeue/2]).
 -export([init/1, handle_cast/2, handle_call/3, handle_info/2, code_change/3,
          terminate/2, start_link/0, stop/1, get_all_msgs/1, get_client_msgs/2, get_msg/3,
-         notify_new_msg/2, notify_no_msg/2, process_msg/3, store_resp/4]).
+         notify_new_msg/2, notify_no_msg/2, process_msg/3, store_resp/5]).
 
 init([]) ->
   lager:info("- Starting persian_event_server"),
@@ -23,15 +23,15 @@ init([]) ->
 %%====================================================================
 %% API functions
 %%====================================================================
-start_link()                         -> gen_server:start_link({local, persian_event_server}, ?MODULE, [], []).
-stop(Pid)                            -> gen_server:call(Pid, {terminate}).
-get_all_msgs(Pid)                    -> gen_server:call(Pid, {get_all_msgs}).
-get_client_msgs(Pid, Client)         -> gen_server:call(Pid, {get_client_msgs, Client}).
-get_msg(Pid, Client, MsgId)          -> gen_server:call(Pid, {get_msg, Client, MsgId}).
-notify_new_msg(Pid, Client)          -> gen_server:cast(Pid, {new_msg, Client}).
-notify_no_msg(Pid, Client)           -> gen_server:cast(Pid, {no_msg, Client}).
-process_msg(Pid, Client, Msg)        -> gen_server:cast(Pid, {process_msg, Client, Msg}).
-store_resp(Pid, Client, MsgId, Resp) -> gen_server:cast(Pid, {store_resp, Client, MsgId, Resp}).
+start_link()                                 -> gen_server:start_link({local, persian_event_server}, ?MODULE, [], []).
+stop(Pid)                                    -> gen_server:call(Pid, {terminate}).
+get_all_msgs(Pid)                            -> gen_server:call(Pid, {get_all_msgs}).
+get_client_msgs(Pid, Client)                 -> gen_server:call(Pid, {get_client_msgs, Client}).
+get_msg(Pid, Client, MsgId)                  -> gen_server:call(Pid, {get_msg, Client, MsgId}).
+notify_new_msg(Pid, Client)                  -> gen_server:cast(Pid, {new_msg, Client}).
+notify_no_msg(Pid, Client)                   -> gen_server:cast(Pid, {no_msg, Client}).
+process_msg(Pid, Client, Msg)                -> gen_server:cast(Pid, {process_msg, Client, Msg}).
+store_resp(Pid, Result, Client, MsgId, Resp) -> gen_server:cast(Pid, {store_resp, Result, Client, MsgId, Resp}).
 
 %%====================================================================
 %% Callback Handlers
@@ -74,7 +74,7 @@ handle_cast({process_msg, Client, {MsgId, Msg}}, State) ->
              end
   end;
 
-handle_cast({store_resp, Client, MsgId, _Resp}, State) ->
+handle_cast({store_resp, Result, Client, MsgId, _Resp}, State) ->
   self() ! {store_resp, Client},
   lager:info("- [MsgId:[~p]|Client:[~p]] - Processing response for a message", [MsgId, Client]),
   case State of
@@ -89,7 +89,7 @@ handle_cast({store_resp, Client, MsgId, _Resp}, State) ->
                                  {noreply, State};
                                {ok, MsgInfo} ->
                                  lager:info("- [MsgId:[~p]|Client:[~p]] - Persisting response", [MsgId, Client]),
-                                 {noreply, orddict:store(Client, orddict:store(MsgId, lists:append(MsgInfo, [{resp, ok, get_timestamp()}]), Msgs), State)}
+                                 {noreply, orddict:store(Client, orddict:store(MsgId, lists:append(MsgInfo, [{resp, Result, get_timestamp()}]), Msgs), State)}
                              end
              end
   end.
@@ -141,7 +141,7 @@ terminate(normal, _State) ->
 request_new_msg(Client) ->
   persian_qu_server:async_dequeue(whereis(persian_qu_server), Client).
 process_event(Client, MsgId, Msg) ->
-  persian_httpc_acm_server:process_event(whereis(persian_httpc_acm_server), Client, MsgId, Msg).
+  persian_httpc_acm_server:process_event(whereis(persian_httpc_acm_server), Client, MsgId, Msg, infinity).
 get_timestamp() ->
   {Mega, Sec, Micro} = os:timestamp(),
   (Mega*1000000 + Sec)*1000 + round(Micro/1000).

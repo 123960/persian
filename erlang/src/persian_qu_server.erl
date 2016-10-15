@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
 %% @doc persian qu_server.
 %% State holds messages waiting for dequeue in a map by client
-%% MapQueue = {[{Client1, [{MsgId1, MsgContent1}, {MsgId2, MsgContent2}...]},
-%%              {Client2, [{MsgId1, MsgContent1}, {MsgId2, MsgContent2}...]}
-%%              ...]}
+%% MapQueue = [{Client1, [{MsgId1, MsgContent1}, {MsgId2, MsgContent2}...]},
+%%             {Client2, [{MsgId1, MsgContent1}, {MsgId2, MsgContent2}...]}
+%%              ...]
 %% @end
 %%%-------------------------------------------------------------------
 -module(persian_qu_server).
@@ -47,12 +47,12 @@ handle_call({get_all_msgs}, _From, MapQueue) ->
   {reply, MapQueue, MapQueue};
 handle_call({get, Client}, _From, []) ->
   self() ! {get, Client},
-  {reply, no_msg, []};
+  {reply, [], []};
 handle_call({get, Client}, _From, MapQueue) ->
   self() ! {get, Client},
   case orddict:find(Client, MapQueue) of
-    {ok, {[],[]}} -> {reply, {no_msg, Client}, MapQueue};
-    {ok, Q}       -> {reply, Q, MapQueue}
+    {ok, Q}       -> {reply, orddict:store(Client, Q, orddict:new()), MapQueue};
+    error         -> {reply, orddict:store(Client, queue:new(), orddict:new()), MapQueue}
   end;
 
 %%--------------------- Dequeue handle_call ----------------------------
