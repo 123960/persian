@@ -28,9 +28,12 @@ handle('GET',[<<"persian">>, <<"sync">>, <<"get_pend_msgs_of_client">>], Req) ->
   MQ     = persian_qu_server:sync_get_msgs(whereis(persian_qu_server), Client),
   {ok, [], persian_json:mq_to_json(MQ)};
 handle('GET',[<<"persian">>, <<"sync">>, <<"get_processed_msgs">>], _Req) ->
-  {ok, [], <<"NOT IMPLEMENTED YET!">>};
-handle('GET',[<<"persian">>, <<"sync">>, <<"get_processed_msgs_of_client">>], _Req) ->
-  {ok, [], <<"NOT IMPLEMENTED YET!">>};
+  ME = persian_event_server:get_all_msgs(whereis(persian_event_server)),
+  {ok, [], persian_json:event_to_json(ME)};
+handle('GET',[<<"persian">>, <<"sync">>, <<"get_processed_msgs_of_client">>], Req) ->
+  Client = elli_request:get_arg(<<"client">>, Req, <<"undefined">>),
+  ME     = persian_event_server:get_client_msgs(whereis(persian_event_server), Client),
+  {ok, [], persian_json:event_to_json(ME)};
 handle('GET',[<<"persian">>, <<"sync">>, <<"get_error_msgs">>], _Req) ->
   {ok, [], <<"NOT IMPLEMENTED YET!">>};
 handle('GET',[<<"persian">>, <<"sync">>, <<"get_error_msgs_of_client">>], _Req) ->

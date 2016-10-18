@@ -1,41 +1,29 @@
+[
+ {<<"1">>, {[{<<"1">>, <<"<soapenv">>}, {<<"2">>, <<"<soapenv2">>}, {<<"3">>, <<"<soapenv3">>}], []}},
+ {<<"2">>, {[{<<"1">>, <<"<soapenv">>}, {<<"2">>, <<"<soapenv2">>}, {<<"3">>, <<"<soapenv3">>}], []}}
+]
 {pend_msgs: [{ "client": "1"
                  "msgs": [] },
                {"client": "2",
                  "msgs": [] }
              ]}
 
-{"1":[],"2":[],"3":[]}
-
-[{<<"1">>, {[{<<"1">>, <<"<soapenv">>}, {<<"2">>, <<"<soapenv2">>}, {<<"3">>, <<"<soapenv3">>}], []}},{<<"2">>, {[{<<"1">>, <<"<soapenv">>}, {<<"2">>, <<"<soapenv2">>}, {<<"3">>, <<"<soapenv3">>}], []}}]
-
 F=fun(MQ) -> orddict:fold(fun(K, V, Acc) -> orddict:store(K, queue:to_list(V), Acc) end,
                           orddict:new(),
                           MQ) end.
 F([{<<"1">>, {[{<<"1">>, <<"<soapenv">>}, {<<"2">>, <<"<soapenv2">>}, {<<"3">>, <<"<soapenv3">>}], []}},{<<"2">>, {[{<<"1">>, <<"<soapenv">>}, {<<"2">>, <<"<soapenv2">>}, {<<"3">>, <<"<soapenv3">>}], []}}]).
-F2=fun(ML, K1, K2) -> orddict:fold(fun(K, V, Acc) ->
-                             orddict:store(K, {{K1, K}, {K2, V}}, Acc) end,
-                           orddict:new(),
-                           ML) end.
+F2=fun(ML, {K1, K2}}) -> orddict:fold(fun(K, V, Acc) ->
+                                        [{K1, K}, {K2, V}] ++ Acc end,
+                                      [],
+                                      ML) end.
 F2([{<<"1">>,
-  [{<<"3">>,<<"<soapenv3">>},
-   {<<"2">>,<<"<soapenv2">>},
-   {<<"1">>,<<"<soapenv">>}]},
+    [{<<"3">>,<<"<soapenv3">>},
+     {<<"2">>,<<"<soapenv2">>},
+     {<<"1">>,<<"<soapenv">>}]},
  {<<"2">>,
-  [{<<"3">>,<<"<soapenv3">>},
-   {<<"2">>,<<"<soapenv2">>},
-   {<<"1">>,<<"<soapenv">>}]}], client, msgs).
-
-F3=fun(MT) -> lists:map(fun({K, {C, M}}) -> [C, M] end, orddict:to_list(MT)) end.
-F3([{<<"1">>,
-  {{client,<<"1">>},
-   {msgs,[{<<"3">>,<<"<soapenv3">>},
-          {<<"2">>,<<"<soapenv2">>},
-          {<<"1">>,<<"<soapenv">>}]}}},
- {<<"2">>,
-  {{client,<<"2">>},
-   {msgs,[{<<"3">>,<<"<soapenv3">>},
-          {<<"2">>,<<"<soapenv2">>},
-          {<<"1">>,<<"<soapenv">>}]}}}]).
+    [{<<"3">>,<<"<soapenv3">>},
+     {<<"2">>,<<"<soapenv2">>},
+     {<<"1">>,<<"<soapenv">>}]}], client, msgs).
 
 F4=fun(M) ->
      lists:map(fun(M2) ->
@@ -50,14 +38,16 @@ F4=fun(M) ->
                M)
    end.
 
-F4([[{client,<<"1">>},
-  {msgs,[{<<"3">>,<<"<soapenv3">>},
-         {<<"2">>,<<"<soapenv2">>},
-         {<<"1">>,<<"<soapenv">>}]}],
- [{client,<<"2">>},
-  {msgs,[{<<"3">>,<<"<soapenv3">>},
-         {<<"2">>,<<"<soapenv2">>},
-         {<<"1">>,<<"<soapenv">>}]}]]
+F4([
+     [{client,<<"1">>},
+      {msgs,[{<<"3">>,<<"<soapenv3">>},
+             {<<"2">>,<<"<soapenv2">>},
+             {<<"1">>,<<"<soapenv1">>}]}],
+     [{client,<<"2">>},
+      {msgs,[{<<"3">>,<<"<soapenv3">>},
+             {<<"2">>,<<"<soapenv2">>},
+             {<<"1">>,<<"<soapenv1">>}]}]
+   ]
 ).
 
 [[{client,<<"1">>}, {msgs,[[{msgId,<<"1">>},{content,<<"<soapenv">>}]]}]]
@@ -94,3 +84,21 @@ jsone:encode(F4([[{client,<<"1">>},
  {<<"3">>,
   [{<<"3">>,
     [{req,ok,1476558812808},{resp,nok,1476558812808}]}]}]
+
+
+%%----------------------------
+E = [{<<"Client1">>, [{<<"MsgId1">>, [{<<"Oper">>, <<"StatusReq">>, <<"StatusResp">>, <<"Content">>, <<"OperTimestamp">>}]}, {<<"MsgId2">>, [{<<"Oper">>, <<"StatusReq">>, <<"StatusResp">>, <<"Content">>, <<"OperTimestamp">>}]}]},
+     {<<"Client2">>, [{<<"MsgId1">>, [{<<"Oper">>, <<"StatusReq">>, <<"StatusResp">>, <<"Content">>, <<"OperTimestamp">>}]}, {<<"MsgId2">>, [{<<"Oper">>, <<"StatusReq">>, <<"StatusResp">>, <<"Content">>, <<"OperTimestamp">>}]}]}]
+
+{
+  processed_msgs: [
+                   {
+                     "client": "Client1",
+                     "msgs": [ {"msgId": "MsgId1",
+                                "operation": "req",
+                                "statusReq": "ok",
+                                "statusResp": "0",
+                                "content": "<xml>",
+                                "operTimestamp": 123456789}]}
+                  ]
+}

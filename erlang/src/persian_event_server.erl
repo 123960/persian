@@ -1,11 +1,12 @@
 %%%-------------------------------------------------------------------
 %% @doc persian event_server.
 %% State holds processed messages in a map by client and by msgid
-%% State = [{Client1, [{MsgId1, [{Oper, Status, Content, OperTimestamp}]}, {MsgId2, [{Oper, Status, Content, OperTimestamp}]}...]},
-%%          {Client2, [{MsgId1, [{Oper, Status, Content, OperTimestamp}]}, {MsgId2, [{Oper, Status, Content, OperTimestamp}]}...]},
+%% State = [{Client1, [{MsgId1, [{Oper, StatusReq, StatusResp, Content, OperTimestamp}]}, {MsgId2, [{Oper, StatusReq, StatusResp, Content, OperTimestamp}]}...]},
+%%          {Client2, [{MsgId1, [{Oper, StatusReq, StatusResp, Content, OperTimestamp}]}, {MsgId2, [{Oper, StatusReq, StatusResp, Content, OperTimestamp}]}...]},
 %%              ...]
-%% Oper   = [req, resp]
-%% Status = [ok, nok]
+%% Oper       = [req, resp]
+%% StatusReq  = [ok, nok]
+%% StatusResp = [0, AnyErrorInDestiny]
 %% @end
 %%%-------------------------------------------------------------------
 -module(persian_event_server).
@@ -56,20 +57,20 @@ handle_cast({process_msg, Client, {MsgId, Msg}}, State) ->
     []    -> lager:info("- [MsgId:[~p]] - Cache is empty, sending message", [MsgId]),
              process_event(Client, MsgId, Msg),
              request_new_msg(Client),
-             {noreply, orddict:store(Client, orddict:store(MsgId, [{sent, ok, get_timestamp()}], orddict:new()), State)};
+             {noreply, orddict:store(Client, orddict:store(MsgId, [{req, ok, null, <<"Content">>, get_timestamp()}], orddict:new()), State)};
     _else -> case orddict:find(Client, State) of
                error      -> lager:info("- [MsgId:[~p]] - There is no message in the cache to the client, sending message", [MsgId]),
                              process_event(Client, MsgId, Msg),
                              request_new_msg(Client),
-                             {noreply, orddict:store(Client, orddict:store(MsgId, [{req, ok, get_timestamp()}], orddict:new()), State)};
+                             {noreply, orddict:store(Client, orddict:store(MsgId, [{req, ok, null, <<"Content">>, get_timestamp()}], orddict:new()), State)};
                {ok, Msgs} -> case orddict:find(MsgId, Msgs) of
                                error   -> lager:info("- [MsgId:[~p]] - Message not processed, sending message", [MsgId]),
                                           process_event(Client, MsgId, Msg),
                                           request_new_msg(Client),
-                                          {noreply, orddict:store(Client, orddict:store(MsgId, [{req, ok, get_timestamp()}], Msgs), State)};
+                                          {noreply, orddict:store(Client, orddict:store(MsgId, [{req, ok, null, <<"Content">>, get_timestamp()}], Msgs), State)};
                                {ok, _} -> lager:info("- [MsgId:[~p]] - Message already processed, nothing to do", [MsgId]),
                                           request_new_msg(Client),
-                                          {noreply, State}
+                                          {noreply, orddict:store(Client, orddict:store(MsgId, [{dup, null, null, <<"Content">>, get_timestamp()}], Msgs), State)}
                              end
              end
   end;
@@ -89,7 +90,7 @@ handle_cast({store_resp, Result, Client, MsgId, _Resp}, State) ->
                                  {noreply, State};
                                {ok, MsgInfo} ->
                                  lager:info("- [MsgId:[~p]|Client:[~p]] - Persisting response", [MsgId, Client]),
-                                 {noreply, orddict:store(Client, orddict:store(MsgId, lists:append(MsgInfo, [{resp, Result, get_timestamp()}]), Msgs), State)}
+                                 {noreply, orddict:store(Client, orddict:store(MsgId, lists:append(MsgInfo, [{resp, Result, ok, <<"Content">>, get_timestamp()}]), Msgs), State)}
                              end
              end
   end.
