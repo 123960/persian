@@ -34,7 +34,7 @@ handle_call({process_event, Client, MsgId, Msg}, _From, State) ->
   case httpc:request(post, {?ACM_URL, [], [], Msg}, [{timeout, 10000}], []) of
     {ok, Result}    -> lager:info("- [client:[~p]|msgid:[~p]] - Response OK in HTTP Request, starting response treatment", [Client, MsgId]),
                        send_resp(ok, Client, MsgId, Result);
-    {error, Reason} -> lager:warning("- [client:[~p]|msgid:[~p]|reason:] - Response NOK in HTTP Request, but I have nothing to do", [Client, MsgId, Reason]),
+    {error, Reason} -> lager:warning("- [client:[~p]|msgid:[~p]|reason:~p] - Response NOK in HTTP Request, but I have nothing to do", [Client, MsgId, Reason]),
                        send_resp(nok, Client, MsgId, Reason)
   end,
   {reply, State, State};

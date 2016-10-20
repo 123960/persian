@@ -103,7 +103,7 @@ handle_call({get_client_msgs, Client}, _From, State) ->
     []    -> {reply, State, State};
     _else -> case orddict:find(Client, State) of
                error      -> {reply, [], State};
-               {ok, Msgs} -> {reply, Msgs, State}
+               {ok, Msgs} -> {reply, orddict:store(Client, Msgs, orddict:new()), State}
              end
   end;
 handle_call({get_msg, Client, MsgId}, _From, State) ->

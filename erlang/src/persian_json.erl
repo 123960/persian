@@ -30,11 +30,16 @@ append_keys(ML, K1, K2) ->
   orddict:fold(fun(K, V, Acc) -> [[{K1, K}, {K2, V}]] ++ Acc end,
                [],
                ML).
-append_keys(ML, msgId, operation, statusReq, statusResp, content, operTimestamp) ->
-  orddict:fold(fun(MsgId, [{Oper, StatusReq, StatusResp, Content, OperTimestamp}], Acc) ->
-                 [[{msgId, MsgId}, {operation, Oper}, {statusReq, StatusReq}, {statusResp, StatusResp}, {content, Content}, {operTimestamp, OperTimestamp}]] ++ Acc end,
-               [],
-               ML).
+append_keys(Msgs, event) ->
+  lists:foldl(fun({MsgId, Values}, Acc) ->
+                Acc ++
+                lists:map(fun({Oper, StatusReq, StatusResp, Content, OperTimestamp}) ->
+                            [{msgId, MsgId}, {operation, Oper}, {statusReq, StatusReq}, {statusResp, StatusResp}, {content, Content}, {operTimestamp, OperTimestamp}]
+                          end,
+                          Values)
+              end,
+              [],
+              Msgs).
 %%---Appends keys to second level
 append_subkeys(Element, M)  ->
   lists:map(fun(M2) ->
@@ -42,7 +47,7 @@ append_subkeys(Element, M)  ->
                           case K of
                             msgs -> case Element of
                                       qu    -> {msgs, append_keys(V, msgId, content)};
-                                      event -> {msgs, append_keys(V, msgId, operation, statusReq, statusResp, content, operTimestamp)}
+                                      event -> {msgs, append_keys(V, event)}
                                     end;
                             _    -> {K, V}
                           end
