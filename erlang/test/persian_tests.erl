@@ -1,6 +1,7 @@
 c(persian_qu_server).
 f(Pid).
 
+{ok, TPid} = elli:start_link([{callback, persian_test_server}, {port, 3001}]).
 {ok, APid} = elli:start_link([{callback, persian_httpd_api_server}, {port, 3000}]).
 {ok, QPid} = persian_qu_server:start_link().
 {ok, EPid} = persian_event_server:start_link().
