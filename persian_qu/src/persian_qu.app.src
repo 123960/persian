@@ -1,0 +1,23 @@
+{application, persian_qu,
+ [{description, "Persian Qu - API and persistent queue for Persian Application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { persian_qu, []}},
+  {applications,
+   [kernel,
+    stdlib
+   ]},
+  {env,[]},
+  {modules, []},
+  {maintainers, ["vinicius.a.ribeiro"]},
+  {licenses, []},
+  {links, []},
+  {lager, [
+     {log_root, "./persian/logs/persian_qu_logs/"},
+     {handlers, [
+       {lager_console_backend, info},
+       {lager_file_backend, [{file, "persian_qu_error.log"}, {level, error}]},
+       {lager_file_backend, [{file, "persian_qu_console.log"}, {level, info}]}
+     ]}
+   ]}
+ ]}.

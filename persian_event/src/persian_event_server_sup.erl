@@ -1,9 +1,9 @@
 %%%-------------------------------------------------------------------
-%% @doc persian qu_server supervisor.
+%% @doc persian event_server supervisor.
 %% @end
 %%%-------------------------------------------------------------------
 
--module(persian_qu_server_sup).
+-module(persian_event_server_sup).
 
 -behaviour(supervisor).
 
@@ -20,7 +20,7 @@
 %%====================================================================
 
 start_link() ->
-    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+    supervisor:start_link({global, ?SERVER}, ?MODULE, []).
 
 %%====================================================================
 %% Supervisor callbacks
@@ -28,12 +28,12 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_one, 5, 5}, [{qu_server1,
-                                  {persian_qu_server, start_link, []},
+    {ok, { {one_for_one, 5, 5}, [{event_server1,
+                                  {persian_event_server, start_link, []},
                                    permanent,
                                    5000,
                                    worker,
-                                   [persian_qu_server]}]} }.
+                                   [persian_event_server]}]} }.
 
 %%====================================================================
 %% Internal functions

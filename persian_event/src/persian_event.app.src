@@ -1,0 +1,23 @@
+{application, persian_event,
+ [{description, "Persian Event - Dequeuer of Persian messages"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { persian_event, []}},
+  {applications,
+   [kernel,
+    stdlib
+   ]},
+  {env,[]},
+  {modules, []},
+  {maintainers, ["vinicius.a.ribeiro"]},
+  {licenses, []},
+  {links, []},
+  {lager, [
+     {log_root, "/home/vinicius/workspace/persian_event/erlang/logs"},
+     {handlers, [
+       {lager_console_backend, info},
+       {lager_file_backend, [{file, "persian_event_error.log"}, {level, error}]},
+       {lager_file_backend, [{file, "persian_event_console.log"}, {level, info}]}
+     ]}
+   ]}
+ ]}.

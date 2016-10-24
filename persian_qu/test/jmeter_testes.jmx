@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="2.9" jmeter="3.0 r1743807">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Persian Tests" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="Variáveis Definidas Pelo Usuário" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="persian_users" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Controlador de Iteração" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">5</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">10</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1476296057000</longProp>
+        <longProp name="ThreadGroup.end_time">1476296057000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="persian-request-enqueue" enabled="true">
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">&lt;soapenv:Envelope xmlns:soapenv=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot; xmlns:ser=&quot;http://services.generic.adapter.integration.components.ams.products.ptinovacao.pt/&quot;&gt; &lt;soapenv:Header&gt; &lt;ser:adapterHeader&gt; &lt;system&gt;NGIN&lt;/system&gt; &lt;operation&gt;Subscricao&lt;/operation&gt; &lt;externalId&gt;1610051932&lt;/externalId&gt; &lt;username&gt;nginUser&lt;/username&gt; &lt;passwd&gt;XDF$%%#$@##&lt;/passwd&gt; &lt;/ser:adapterHeader&gt; &lt;/soapenv:Header&gt; &lt;soapenv:Body&gt; &lt;ser:processEvent&gt; &lt;adapterInfo&gt; &lt;adapterId&gt;1&lt;/adapterId&gt; &lt;name&gt;Adaptador de Subscricao&lt;/name&gt; &lt;eventTime&gt;2016-10-05 15:00:00&lt;/eventTime&gt; &lt;eventBaseTime&gt;2016-10-05 15:00:00&lt;/eventBaseTime&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001001&lt;/id&gt; &lt;value&gt;1610052141&lt;/value&gt; &lt;name&gt;ACCOUNT&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;004002&lt;/id&gt; &lt;value&gt;30&lt;/value&gt; &lt;name&gt;RECHARGE_VALUE&lt;/name&gt; &lt;type&gt;Double&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001006&lt;/id&gt; &lt;value&gt;11&lt;/value&gt; &lt;name&gt;AREA_CODE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001002&lt;/id&gt; &lt;value&gt;7&lt;/value&gt; &lt;name&gt;CLIENT_TYPE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001011&lt;/id&gt; &lt;value&gt;AGSA11060000&lt;/value&gt; &lt;name&gt;EQUIPMENT_MODEL&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001013&lt;/id&gt; &lt;value&gt;2012-04-13 17:34:45&lt;/value&gt; &lt;name&gt;FIRST_USE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001022&lt;/id&gt; &lt;value&gt;2015-08-25 17:34:45&lt;/value&gt; &lt;name&gt;PROFILE_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001023&lt;/id&gt; &lt;value&gt;1&lt;/value&gt; &lt;name&gt;PRODUCT_TYPE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001024&lt;/id&gt; &lt;value&gt;2015-10-11 17:34:45&lt;/value&gt; &lt;name&gt;PROVISION_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;!--&lt;ser:simpleItem&gt; &lt;id&gt;001025&lt;/id&gt; &lt;value&gt;2015-10-11 17:34:45&lt;/value&gt; &lt;name&gt;CURRENT_BILLING_CYCLE_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt;--&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001008&lt;/id&gt; &lt;value&gt;SP&lt;/value&gt; &lt;name&gt;GEOGRAPHICAL_STATE&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001014&lt;/id&gt; &lt;value&gt;2013-07-18 16:10:21&lt;/value&gt; &lt;name&gt;LAST_RECHARGE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001015&lt;/id&gt; &lt;value&gt;26&lt;/value&gt; &lt;name&gt;LAST_RECHARGE_VALUE&lt;/name&gt; &lt;type&gt;Double&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001016&lt;/id&gt; &lt;value&gt;2012-04-13 17:34:43&lt;/value&gt; &lt;name&gt;LAST_RENEW_CYCLE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001017&lt;/id&gt; &lt;value&gt;80&lt;/value&gt; &lt;name&gt;LAST_RENEW_CYCLE_VALUE&lt;/name&gt; &lt;type&gt;Double&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001012&lt;/id&gt; &lt;value&gt;3&lt;/value&gt; &lt;name&gt;MANUFACTURER&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001003&lt;/id&gt; &lt;value&gt;11995054825&lt;/value&gt; &lt;name&gt;MSISDN&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002019&lt;/id&gt; &lt;value&gt;0&lt;/value&gt; &lt;name&gt;PORTABILITY_SITUATION_CODE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001004&lt;/id&gt; &lt;value&gt;VIVOTODAGSM&lt;/value&gt; &lt;name&gt;PROFILE&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001009&lt;/id&gt; &lt;value&gt;30&lt;/value&gt; &lt;name&gt;STATE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001010&lt;/id&gt; &lt;value&gt;2012-04-13 17:34:45&lt;/value&gt; &lt;name&gt;STATE_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001005&lt;/id&gt; &lt;value&gt;GSM&lt;/value&gt; &lt;name&gt;TECHNOLOGY&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;001007&lt;/id&gt; &lt;value&gt;2&lt;/value&gt; &lt;name&gt;TELCO&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;003001&lt;/id&gt; &lt;value&gt;2012-05-18 16:12:06&lt;/value&gt; &lt;name&gt;EVENT_REC_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;003002&lt;/id&gt; &lt;value&gt;2012-05-18 16:12:07&lt;/value&gt; &lt;name&gt;EVENT_PROC_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;003003&lt;/id&gt; &lt;value&gt;1&lt;/value&gt; &lt;name&gt;REASON_CODE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:listItem&gt; &lt;id&gt;002001&lt;/id&gt; &lt;value&gt;PROMO_LIST&lt;/value&gt; &lt;name&gt;PROMO_LIST&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;ser:listItem&gt; &lt;id&gt;002002&lt;/id&gt; &lt;value&gt;870&lt;/value&gt; &lt;name&gt;PROMOTION&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002003&lt;/id&gt; &lt;value&gt;870&lt;/value&gt; &lt;name&gt;PROMO_CODE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002004&lt;/id&gt; &lt;value&gt;1&lt;/value&gt; &lt;name&gt;INSTANCE_NBR&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002005&lt;/id&gt; &lt;value&gt;2&lt;/value&gt; &lt;name&gt;SUB_STATUS&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002006&lt;/id&gt; &lt;value&gt;2015-11-02 00:00:00&lt;/value&gt; &lt;name&gt;SUB_STATUS_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002007&lt;/id&gt; &lt;value&gt;157&lt;/value&gt; &lt;name&gt;SUB_STATUS_REASON&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002008&lt;/id&gt; &lt;value&gt;230&lt;/value&gt; &lt;name&gt;SUB_STATUS_EVENT&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002009&lt;/id&gt; &lt;value&gt;2065-11-02 23:59:59&lt;/value&gt; &lt;name&gt;SUB_STATUS_REVAL_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;/ser:listItem&gt; &lt;/ser:listItem&gt; &lt;ser:listItem&gt; &lt;id&gt;002010&lt;/id&gt; &lt;value&gt;PRODUCT_LIST&lt;/value&gt; &lt;name&gt;PRODUCT_LIST&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;ser:listItem&gt; &lt;id&gt;002011&lt;/id&gt; &lt;value&gt;VIVOAVISATASTE&lt;/value&gt; &lt;name&gt;PRODUCT&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002012&lt;/id&gt; &lt;value&gt;VIVOAVISATASTE&lt;/value&gt; &lt;name&gt;SERVICE&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002013&lt;/id&gt; &lt;value&gt;ACT&lt;/value&gt; &lt;name&gt;SERVICE_STATE&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002014&lt;/id&gt; &lt;value&gt;2012-08-16 23:59:59&lt;/value&gt; &lt;name&gt;EXPIRATION_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;/ser:listItem&gt; &lt;ser:listItem&gt; &lt;id&gt;002011&lt;/id&gt; &lt;value&gt;PACK_PJB300_MSL&lt;/value&gt; &lt;name&gt;PRODUCT&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002012&lt;/id&gt; &lt;value&gt;PACK_PJB300_MSL&lt;/value&gt; &lt;name&gt;SERVICE&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002013&lt;/id&gt; &lt;value&gt;ACT&lt;/value&gt; &lt;name&gt;SERVICE_STATE&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;002014&lt;/id&gt; &lt;value&gt;2014-04-13 23:59:59&lt;/value&gt; &lt;name&gt;EXPIRATION_DATE&lt;/name&gt; &lt;type&gt;Date&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;/ser:listItem&gt; &lt;/ser:listItem&gt; &lt;ser:listItem&gt; &lt;id&gt;002015&lt;/id&gt; &lt;value&gt;TAG_LIST&lt;/value&gt; &lt;name&gt;TAG_LIST&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:listItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;004005&lt;/id&gt; &lt;value&gt;3&lt;/value&gt; &lt;name&gt;CHANNEL_CODE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;004006&lt;/id&gt; &lt;value&gt;000&lt;/value&gt; &lt;name&gt;MEDIA_CODE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;004001&lt;/id&gt; &lt;value&gt;239&lt;/value&gt; &lt;name&gt;MIX_CODE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;003005&lt;/id&gt; &lt;value&gt;19&lt;/value&gt; &lt;name&gt;MULTI_OPERATION&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;004003&lt;/id&gt; &lt;value&gt;2&lt;/value&gt; &lt;name&gt;RECHARGE_TYPE&lt;/name&gt; &lt;type&gt;Long&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:simpleItem&gt; &lt;id&gt;004007&lt;/id&gt; &lt;value&gt;3&lt;/value&gt; &lt;name&gt;SUBCHANNEL_CODE&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:simpleItem&gt; &lt;ser:listItem&gt; &lt;id&gt;005001&lt;/id&gt; &lt;value&gt;campaigns&lt;/value&gt; &lt;name&gt;CAMPAIGNS&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:listItem&gt; &lt;ser:listItem&gt; &lt;id&gt;001016&lt;/id&gt; &lt;value&gt;00000002&lt;/value&gt; &lt;name&gt;NOTIF_PERMISSIONS&lt;/name&gt; &lt;type&gt;String&lt;/type&gt; &lt;/ser:listItem&gt; &lt;/adapterInfo&gt; &lt;/ser:processEvent&gt; &lt;/soapenv:Body&gt; &lt;/soapenv:Envelope&gt;</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain">localhost</stringProp>
+          <stringProp name="HTTPSampler.port">3000</stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">/persian/enqueue?client=${clientId}&amp;msgId=${msgId}</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="Pré-Processador BeanShell" enabled="true">
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <boolProp name="resetInterpreter">false</boolProp>
+            <stringProp name="script">int    clientId   = ctx.getThreadNum()+1;
+String msgId      = Integer.toString(clientId) + &quot;_&quot; + System.currentTimeMillis();
+vars.put(&quot;clientId&quot;, Integer.toString(clientId));
+vars.put(&quot;msgId&quot;, msgId);</stringProp>
+          </BeanShellPreProcessor>
+          <hashTree/>
+          <ResultCollector guiclass="TableVisualizer" testclass="ResultCollector" testname="Ver Resultados em Tabela" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>true</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+                <threadCounts>true</threadCounts>
+                <idleTime>true</idleTime>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

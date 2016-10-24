@@ -9,9 +9,9 @@
 -module(persian_qu_server).
 -behaviour(gen_server).
 -compile([{parse_transform, lager_transform}]).
--import(persian_event_server, [notify_new_msg/2, notify_no_msg/2, process_msg/3]).
--export([init/1, terminate/2, start_link/0, code_change/3, handle_call/3, handle_cast/2, handle_info/2, stop/1,
-         sync_enqueue/3, sync_get_msgs/1, sync_get_msgs/2, sync_dequeue/2, async_dequeue/2]).
+
+-export([init/1, terminate/2, start_link/0, code_change/3, handle_call/3, handle_cast/2, handle_info/2, stop/0,
+         sync_enqueue/3, sync_get_msgs/1, sync_get_msgs/2, sync_dequeue/2, async_dequeue/1]).
 
 init([]) ->
   lager:info("- Starting persian_qu_server"),
@@ -20,13 +20,13 @@ init([]) ->
 %%====================================================================
 %% API functions
 %%====================================================================
-start_link()                   -> gen_server:start_link({local, persian_qu_server}, ?MODULE, [], []).
-stop(Pid)                      -> gen_server:call(Pid, {terminate}).
+start_link()                   -> gen_server:start_link({global, ?MODULE}, ?MODULE, [], []).
+stop()                         -> gen_server:call({global, ?MODULE}, {terminate}).
 sync_enqueue(Pid, Client, Msg) -> gen_server:call(Pid, {enq, Client, Msg}).
 sync_get_msgs(Pid)             -> gen_server:call(Pid, {get_all_msgs}).
 sync_get_msgs(Pid, Client)     -> gen_server:call(Pid, {get, Client}).
 sync_dequeue(Pid, Client)      -> gen_server:call(Pid, {deq, Client}).
-async_dequeue(Pid, Client)     -> gen_server:cast(Pid, {deq, Client}).
+async_dequeue(Client)          -> gen_server:cast({global, ?MODULE}, {deq, Client}).
 
 %%====================================================================
 %% Callback Handlers
@@ -120,10 +120,10 @@ dequeue(Client, MapQueue) ->
 
 %%---- NEW_MSG ------------------------------------
 notify_new_msg(Client) ->
-  persian_event_server:notify_new_msg(whereis(persian_event_server), Client).
+  rpc:call(persian_event@localhost, persian_event_server, notify_new_msg, [Client]).
 %%---- NO_MSG ------------------------------------
 notify_no_msg(Client) ->
-  persian_event_server:notify_no_msg(whereis(persian_event_server), Client).
+  rpc:call(persian_event@localhost, persian_event_server, notify_no_msg, [Client]).
 %%---- PROCESS_MSG ------------------------------------
 process_msg(Client, Msg) ->
-  persian_event_server:process_msg(whereis(persian_event_server), Client, Msg).
+  rpc:call(persian_event@localhost, persian_event_server, process_msg, [Client, Msg]).

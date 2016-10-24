@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(persian_supersup).
+-module(persian_qu_supersup).
 
 -behaviour(supervisor).
 
@@ -20,7 +20,7 @@
 %%====================================================================
 
 start_link() ->
-    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+    supervisor:start_link({global, ?SERVER}, ?MODULE, []).
 
 %%====================================================================
 %% Supervisor callbacks
@@ -39,19 +39,7 @@ init([]) ->
                                     permanent,
                                     5000,
                                     supervisor,
-                                    [persian_qu_server_sup]},
-                                 {persian_event_server_sup1,
-                                   {persian_event_server_sup, start_link, []},
-                                    permanent,
-                                    5000,
-                                    supervisor,
-                                    [persian_event_server_sup]},
-                                 {persian_httpc_acm_server_sup1,
-                                   {persian_httpc_acm_server_sup, start_link, []},
-                                    permanent,
-                                    5000,
-                                    supervisor,
-                                    [persian_httpc_acm_server_sup]}]}}.
+                                    [persian_qu_server_sup]}]}}.
 
 
 %%====================================================================

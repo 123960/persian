@@ -3,7 +3,7 @@
 %% @end
 %%%-------------------------------------------------------------------
 
--module(persian).
+-module(persian_event).
 
 -behaviour(application).
 -compile([{parse_transform, lager_transform}]).
@@ -17,12 +17,12 @@
 
 start(_StartType, _StartArgs) ->
   lager:start(),
-  lager:info("- Starting persian"),
-  persian_supersup:start_link().
+  lager:info("- Starting persian_event application"),
+  persian_event_supersup:start_link().
 
 %%--------------------------------------------------------------------
 stop(_State) ->
-  lager:info("- Stoping persian"),
+  lager:info("- Stoping persian_event application"),
   lager:stop(),
   ok.
 
