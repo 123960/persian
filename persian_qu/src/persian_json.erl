@@ -11,7 +11,7 @@ mq_to_json([]) -> jsone:encode({[{<<"pend_msgs">>, []}]});
 mq_to_json(MQ) -> jsone:encode({[{<<"pend_msgs">>,
                                  append_subkeys(qu, append_keys(mq_to_mlist(MQ), client, msgs))
                                 }]}).
-event_to_json([]) -> jsone:encode({[{<<"pend_msgs">>, []}]});
+event_to_json([]) -> jsone:encode({[{<<"processed_msgs">>, []}]});
 event_to_json(ME) -> jsone:encode({[{<<"processed_msgs">>,
                                     append_subkeys(event, append_keys(ME, client, msgs))
                                   }]}).
