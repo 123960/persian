@@ -1,7 +1,7 @@
 -module(persian_httpd_api_server).
 -compile([{parse_transform, lager_transform}]).
 -export([handle/2, handle_event/3]).
--import(persian_qu_server, [sync_enqueue/3, sync_get_msgs/2]).
+
 -include_lib("elli/include/elli.hrl").
 -behaviour(elli_handler).
 
@@ -21,18 +21,18 @@ handle('POST',[<<"persian">>, <<"helloworld">>], _Req) ->
 %% GET sync_operations
 %%====================================================================
 handle('GET',[<<"persian">>, <<"sync">>, <<"get_pend_msgs">>], _Req) ->
-  MQ = persian_qu_server:sync_get_msgs(whereis(persian_qu_server)),
+  MQ = sync_get_msgs(),
   {ok, [], persian_json:mq_to_json(MQ)};
 handle('GET',[<<"persian">>, <<"sync">>, <<"get_pend_msgs_of_client">>], Req) ->
   Client = elli_request:get_arg(<<"client">>, Req, <<"undefined">>),
-  MQ     = persian_qu_server:sync_get_msgs(whereis(persian_qu_server), Client),
+  MQ     = sync_get_msgs(Client),
   {ok, [], persian_json:mq_to_json(MQ)};
 handle('GET',[<<"persian">>, <<"sync">>, <<"get_processed_msgs">>], _Req) ->
-  ME = persian_event_server:get_all_msgs(whereis(persian_event_server)),
+  ME = get_all_msgs(),
   {ok, [], persian_json:event_to_json(ME)};
 handle('GET',[<<"persian">>, <<"sync">>, <<"get_processed_msgs_of_client">>], Req) ->
   Client = elli_request:get_arg(<<"client">>, Req, <<"undefined">>),
-  ME     = persian_event_server:get_client_msgs(whereis(persian_event_server), Client),
+  ME     = get_client_msgs(Client),
   {ok, [], persian_json:event_to_json(ME)};
 handle('GET',[<<"persian">>, <<"sync">>, <<"get_error_msgs">>], _Req) ->
   {ok, [], <<"NOT IMPLEMENTED YET!">>};
@@ -48,7 +48,7 @@ handle('POST',[<<"persian">>, <<"sync">>, <<"enqueue">>], Req) ->
   Client = elli_request:get_arg(<<"client">>, Req, <<"undefined">>),
   MsgId  = elli_request:get_arg(<<"msgId">>, Req, <<"undefined">>),
   Msg    = elli_request:body(Req),
-  persian_qu_server:sync_enqueue(whereis(persian_qu_server), Client, {MsgId, Msg}),
+  sync_enqueue(Client, MsgId, Msg),
   {ok, [], <<"enqueue ok for message ", MsgId/binary, " of client ", Client/binary>>};
 
 handle(_, _, _Req) ->
@@ -62,3 +62,17 @@ handle_event(_Event, _Data, _Args) ->
 %%====================================================================
 %% Internal functions
 %%====================================================================
+sync_get_msgs() ->
+  rpc:call(persian_qu@localhost, persian_qu_server, sync_get_msgs, []).
+
+sync_get_msgs(Client) ->
+  rpc:call(persian_qu@localhost, persian_qu_server, sync_get_msgs, [Client]).
+
+get_all_msgs() ->
+  rpc:call(persian_event@localhost, persian_event_server, get_all_msgs, []).
+
+get_client_msgs(Client) ->
+  rpc:call(persian_event@localhost, persian_event_server, get_client_msgs, [Client]).
+
+sync_enqueue(Client, MsgId, Msg) ->
+  rpc:call(persian_qu@localhost, persian_qu_server, sync_enqueue, [Client, {MsgId, Msg}]).

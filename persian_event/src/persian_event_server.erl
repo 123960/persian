@@ -40,7 +40,7 @@ store_resp(Result, Client, MsgId, Resp) -> gen_server:cast({global, ?MODULE}, {s
 %%--------------------- NEW_MSG handle_cast (async) --------------------
 handle_cast({new_msg, Client}, State) ->
   self() ! {new_msg, Client},
-  persian_qu_server:async_dequeue(whereis(persian_qu_server), Client),
+  request_new_msg(Client),
   {noreply, State};
 
 %%--------------------- NO_MSG handle_cast (async) --------------------

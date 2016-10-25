@@ -71,4 +71,4 @@ terminate(normal, _State) ->
 %% Internal functions
 %%====================================================================
 send_resp(Result, Client, MsgId, Resp) ->
-  persian_event_server:store_resp(whereis(persian_event_server), Result, Client, MsgId, Resp).
+  rpc:call(persian_event@localhost, persian_event_server, store_resp, [Result, Client, MsgId, Resp]).

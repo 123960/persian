@@ -11,7 +11,7 @@
 -compile([{parse_transform, lager_transform}]).
 
 -export([init/1, terminate/2, start_link/0, code_change/3, handle_call/3, handle_cast/2, handle_info/2, stop/0,
-         sync_enqueue/3, sync_get_msgs/1, sync_get_msgs/2, sync_dequeue/2, async_dequeue/1]).
+         sync_enqueue/2, sync_get_msgs/0, sync_get_msgs/1, sync_dequeue/1, async_dequeue/1]).
 
 init([]) ->
   lager:info("- Starting persian_qu_server"),
@@ -20,13 +20,13 @@ init([]) ->
 %%====================================================================
 %% API functions
 %%====================================================================
-start_link()                   -> gen_server:start_link({global, ?MODULE}, ?MODULE, [], []).
-stop()                         -> gen_server:call({global, ?MODULE}, {terminate}).
-sync_enqueue(Pid, Client, Msg) -> gen_server:call(Pid, {enq, Client, Msg}).
-sync_get_msgs(Pid)             -> gen_server:call(Pid, {get_all_msgs}).
-sync_get_msgs(Pid, Client)     -> gen_server:call(Pid, {get, Client}).
-sync_dequeue(Pid, Client)      -> gen_server:call(Pid, {deq, Client}).
-async_dequeue(Client)          -> gen_server:cast({global, ?MODULE}, {deq, Client}).
+start_link()              -> gen_server:start_link({global, ?MODULE}, ?MODULE, [], []).
+stop()                    -> gen_server:call({global, ?MODULE}, {terminate}).
+sync_enqueue(Client, Msg) -> gen_server:call({global, ?MODULE}, {enq, Client, Msg}).
+sync_get_msgs()           -> gen_server:call({global, ?MODULE}, {get_all_msgs}).
+sync_get_msgs(Client)     -> gen_server:call({global, ?MODULE}, {get, Client}).
+sync_dequeue(Client)      -> gen_server:call({global, ?MODULE}, {deq, Client}).
+async_dequeue(Client)     -> gen_server:cast({global, ?MODULE}, {deq, Client}).
 
 %%====================================================================
 %% Callback Handlers

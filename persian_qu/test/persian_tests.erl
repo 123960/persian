@@ -42,6 +42,9 @@ erl -pa _build/default/lib/*/ebin
 werl -sname persian_qu@localhost -pa _build\default\lib\elli\ebin _build\default\lib\persian_qu\ebin _build\default\lib\goldrush\ebin _build\default\lib\jsone\ebin _build\default\lib\lager\ebin
 werl -sname persian_event@localhost -pa _build\default\lib\persian_event\ebin _build\default\lib\goldrush\ebin _build\default\lib\lager\ebin
 
+erl -sname persian_qu@localhost -pa _build/default/lib/*/ebin
+erl -sname persian_event@localhost -pa _build/default/lib/*/ebin
+
 http://127.0.0.1:3000/persian/enqueue?msgId=1&client=1
 
 application:start(persian).
