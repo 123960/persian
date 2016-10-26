@@ -140,7 +140,7 @@ terminate(normal, _State) ->
 %% Internal functions
 %%====================================================================
 request_new_msg(Client) ->
-  rpc:call(persian_qu@localhost, persian_qu_server, async_dequeue, [Client]).
+  rpc:call(persian_node:qu_node(Client), persian_qu_server, async_dequeue, [Client]).
 process_event(Client, MsgId, Msg) ->
   persian_httpc_acm_server:process_event(whereis(persian_httpc_acm_server), Client, MsgId, Msg, infinity).
 get_timestamp() ->

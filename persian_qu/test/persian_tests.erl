@@ -39,8 +39,10 @@ Pid = whereis(persian_qu_server).
 erl -pa _build\default\lib\elli\ebin _build\default\lib\persian_qu\ebin _build\default\lib\goldrush\ebin _build\default\lib\jsone\ebin _build\default\lib\lager\ebin
 erl -pa _build/default/lib/*/ebin
 
-werl -sname persian_qu@localhost -pa _build\default\lib\elli\ebin _build\default\lib\persian_qu\ebin _build\default\lib\goldrush\ebin _build\default\lib\jsone\ebin _build\default\lib\lager\ebin
-werl -sname persian_event@localhost -pa _build\default\lib\persian_event\ebin _build\default\lib\goldrush\ebin _build\default\lib\lager\ebin
+werl -sname persian_qu_node0@localhost -pa _build\default\lib\elli\ebin _build\default\lib\persian_qu\ebin _build\default\lib\goldrush\ebin _build\default\lib\jsone\ebin _build\default\lib\lager\ebin
+werl -sname persian_qu_node1@localhost -pa _build\default\lib\elli\ebin _build\default\lib\persian_qu\ebin _build\default\lib\goldrush\ebin _build\default\lib\jsone\ebin _build\default\lib\lager\ebin
+werl -sname persian_event_node0@localhost -pa _build\default\lib\persian_event\ebin _build\default\lib\goldrush\ebin _build\default\lib\lager\ebin
+werl -sname persian_event_node1@localhost -pa _build\default\lib\persian_event\ebin _build\default\lib\goldrush\ebin _build\default\lib\lager\ebin
 
 erl -sname persian_qu@localhost -pa _build/default/lib/*/ebin
 erl -sname persian_event@localhost -pa _build/default/lib/*/ebin

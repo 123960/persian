@@ -71,4 +71,4 @@ terminate(normal, _State) ->
 %% Internal functions
 %%====================================================================
 send_resp(Result, Client, MsgId, Resp) ->
-  rpc:call(persian_event@localhost, persian_event_server, store_resp, [Result, Client, MsgId, Resp]).
+  rpc:call(persian_node:event_node(Client), persian_event_server, store_resp, [Result, Client, MsgId, Resp]).

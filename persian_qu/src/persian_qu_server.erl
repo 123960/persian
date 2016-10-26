@@ -120,10 +120,10 @@ dequeue(Client, MapQueue) ->
 
 %%---- NEW_MSG ------------------------------------
 notify_new_msg(Client) ->
-  rpc:call(persian_event@localhost, persian_event_server, notify_new_msg, [Client]).
+  rpc:call(persian_node:event_node(Client), persian_event_server, notify_new_msg, [Client]).
 %%---- NO_MSG ------------------------------------
 notify_no_msg(Client) ->
-  rpc:call(persian_event@localhost, persian_event_server, notify_no_msg, [Client]).
+  rpc:call(persian_node:event_node(Client), persian_event_server, notify_no_msg, [Client]).
 %%---- PROCESS_MSG ------------------------------------
 process_msg(Client, Msg) ->
-  rpc:call(persian_event@localhost, persian_event_server, process_msg, [Client, Msg]).
+  rpc:call(persian_node:event_node(Client), persian_event_server, process_msg, [Client, Msg]).

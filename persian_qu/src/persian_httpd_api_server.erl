@@ -63,16 +63,16 @@ handle_event(_Event, _Data, _Args) ->
 %% Internal functions
 %%====================================================================
 sync_get_msgs() ->
-  rpc:call(persian_qu@localhost, persian_qu_server, sync_get_msgs, []).
+  rpc:call(persian_node:qu_node(1), persian_qu_server, sync_get_msgs, []).
 
 sync_get_msgs(Client) ->
-  rpc:call(persian_qu@localhost, persian_qu_server, sync_get_msgs, [Client]).
+  rpc:call(persian_node:qu_node(Client), persian_qu_server, sync_get_msgs, [Client]).
 
 get_all_msgs() ->
-  rpc:call(persian_event@localhost, persian_event_server, get_all_msgs, []).
+  rpc:call(persian_node:event_node(1), persian_event_server, get_all_msgs, []).
 
 get_client_msgs(Client) ->
-  rpc:call(persian_event@localhost, persian_event_server, get_client_msgs, [Client]).
+  rpc:call(persian_node:event_node(Client), persian_event_server, get_client_msgs, [Client]).
 
 sync_enqueue(Client, MsgId, Msg) ->
-  rpc:call(persian_qu@localhost, persian_qu_server, sync_enqueue, [Client, {MsgId, Msg}]).
+  rpc:call(persian_node:qu_node(Client), persian_qu_server, sync_enqueue, [Client, {MsgId, Msg}]).

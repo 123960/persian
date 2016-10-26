@@ -28,7 +28,7 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_one, 5, 5}, [{qu_server1,
+    {ok, { {one_for_one, 5, 5}, [{persian_node:qu_server_name(),
                                   {persian_qu_server, start_link, []},
                                    permanent,
                                    5000,
