@@ -2,7 +2,7 @@
 -behaviour(gen_server).
 -compile([{parse_transform, lager_transform}]).
 -export([init/1, handle_cast/2, handle_call/3, handle_info/2, code_change/3,
-         terminate/2, start_link/0, stop/1, process_event/5]).
+         terminate/2, start_link/1, stop/1, process_event/5]).
 
 %%-define(ACM_URL, "http://172.22.4.142:8080/genericadapter/GenericAdapter").
 -define(ACM_URL, "http://localhost:3001/persian/test/nok").
@@ -16,7 +16,7 @@ init([]) ->
 %%====================================================================
 %% API functions
 %%====================================================================
-start_link() -> gen_server:start_link({local, persian_httpc_acm_server}, ?MODULE, [], []).
+start_link(Name) -> gen_server:start_link({local, Name}, ?MODULE, [], []).
 stop(Pid)    -> gen_server:call(Pid, {terminate}).
 process_event(Pid, Client, MsgId, Msg, Timeout) ->
   gen_server:call(Pid, {process_event, Client, MsgId, Msg}, Timeout).

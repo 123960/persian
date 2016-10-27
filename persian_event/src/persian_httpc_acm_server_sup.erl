@@ -29,7 +29,7 @@ start_link() ->
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
     {ok, { {one_for_one, 5, 5}, [{persian_node:event_httpc_acm_sup_name(),
-                                  {persian_httpc_acm_server, start_link, []},
+                                  {persian_httpc_acm_server, start_link, [persian_node:event_httpc_acm_sup_name()]},
                                    permanent,
                                    5000,
                                    worker,

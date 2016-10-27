@@ -63,16 +63,23 @@ handle_event(_Event, _Data, _Args) ->
 %% Internal functions
 %%====================================================================
 sync_get_msgs() ->
-  rpc:call(persian_node:qu_node(1), persian_qu_server, sync_get_msgs, []).
+  persian_qu_server:sync_get_msgs(persian_node:qu_server_name()).
 
 sync_get_msgs(Client) ->
-  rpc:call(persian_node:qu_node(Client), persian_qu_server, sync_get_msgs, [Client]).
+  persian_qu_server:sync_get_msgs(persian_node:qu_server_name(), Client).
 
 get_all_msgs() ->
-  rpc:call(persian_node:event_node(1), persian_event_server, get_all_msgs, []).
+  rpc:call(persian_node:event_node(0), persian_event_server, get_all_msgs, [event_server_name(0)]).
 
 get_client_msgs(Client) ->
-  rpc:call(persian_node:event_node(Client), persian_event_server, get_client_msgs, [Client]).
+  rpc:call(persian_node:event_node(Client), persian_event_server, get_client_msgs, [event_server_name(Client), Client]).
 
 sync_enqueue(Client, MsgId, Msg) ->
-  rpc:call(persian_node:qu_node(Client), persian_qu_server, sync_enqueue, [Client, {MsgId, Msg}]).
+  try persian_qu_server:sync_enqueue(persian_node:qu_server_name(), Client, {MsgId, Msg}) of
+    OK -> lager:info("- sync enqueue success")
+  catch
+    Err -> lager:error("- sync enqueue failed ~p", [Err])
+  end.
+
+event_server_name(Client) ->
+  persian_node:event_server_name(persian_node:event_node(Client)).

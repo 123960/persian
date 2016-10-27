@@ -14,8 +14,8 @@
 -compile([{parse_transform, lager_transform}]).
 
 -export([init/1, handle_cast/2, handle_call/3, handle_info/2, code_change/3,
-         terminate/2, start_link/0, stop/0, get_all_msgs/0, get_client_msgs/1, get_msg/2,
-         notify_new_msg/1, notify_no_msg/1, process_msg/2, store_resp/4]).
+         terminate/2, start_link/1, stop/1, get_all_msgs/1, get_client_msgs/2, get_msg/3,
+         notify_new_msg/2, notify_no_msg/2, process_msg/3, store_resp/5]).
 
 init([]) ->
   lager:info("- Starting persian_event_server"),
@@ -24,15 +24,15 @@ init([]) ->
 %%====================================================================
 %% API functions
 %%====================================================================
-start_link()                            -> gen_server:start_link({global, ?MODULE}, ?MODULE, [], []).
-stop()                                  -> gen_server:call({global, ?MODULE}, {terminate}).
-get_all_msgs()                          -> gen_server:call({global, ?MODULE}, {get_all_msgs}).
-get_client_msgs(Client)                 -> gen_server:call({global, ?MODULE}, {get_client_msgs, Client}).
-get_msg(Client, MsgId)                  -> gen_server:call({global, ?MODULE}, {get_msg, Client, MsgId}).
-notify_new_msg(Client)                  -> gen_server:cast({global, ?MODULE}, {new_msg, Client}).
-notify_no_msg(Client)                   -> gen_server:cast({global, ?MODULE}, {no_msg, Client}).
-process_msg(Client, Msg)                -> gen_server:cast({global, ?MODULE}, {process_msg, Client, Msg}).
-store_resp(Result, Client, MsgId, Resp) -> gen_server:cast({global, ?MODULE}, {store_resp, Result, Client, MsgId, Resp}).
+start_link(PName)                              -> gen_server:start_link({global, PName}, ?MODULE, [], []).
+stop(PName)                                    -> gen_server:call({global, PName}, {terminate}).
+get_all_msgs(PName)                            -> gen_server:call({global, PName}, {get_all_msgs}).
+get_client_msgs(PName, Client)                 -> gen_server:call({global, PName}, {get_client_msgs, Client}).
+get_msg(PName, Client, MsgId)                  -> gen_server:call({global, PName}, {get_msg, Client, MsgId}).
+notify_new_msg(PName, Client)                  -> gen_server:cast({global, PName}, {new_msg, Client}).
+notify_no_msg(PName, Client)                   -> gen_server:cast({global, PName}, {no_msg, Client}).
+process_msg(PName, Client, Msg)                -> gen_server:cast({global, PName}, {process_msg, Client, Msg}).
+store_resp(PName, Result, Client, MsgId, Resp) -> gen_server:cast({global, PName}, {store_resp, Result, Client, MsgId, Resp}).
 
 %%====================================================================
 %% Callback Handlers
@@ -140,9 +140,12 @@ terminate(normal, _State) ->
 %% Internal functions
 %%====================================================================
 request_new_msg(Client) ->
-  rpc:call(persian_node:qu_node(Client), persian_qu_server, async_dequeue, [Client]).
+  rpc:call(persian_node:qu_node(Client), persian_qu_server, async_dequeue, [qu_server_name(Client), Client]).
 process_event(Client, MsgId, Msg) ->
   persian_httpc_acm_server:process_event(whereis(persian_httpc_acm_server), Client, MsgId, Msg, infinity).
 get_timestamp() ->
   {Mega, Sec, Micro} = os:timestamp(),
   (Mega*1000000 + Sec)*1000 + round(Micro/1000).
+
+qu_server_name(Client) ->
+  persian_node:qu_server_name(persian_node:qu_node(Client)).

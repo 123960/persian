@@ -20,7 +20,7 @@
 %%====================================================================
 
 start_link() ->
-    supervisor:start_link({global, ?SERVER}, ?MODULE, []).
+    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 %%====================================================================
 %% Supervisor callbacks
@@ -29,7 +29,7 @@ start_link() ->
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
     {ok, { {one_for_one, 5, 5}, [{persian_node:event_server_name(),
-                                  {persian_event_server, start_link, []},
+                                  {persian_event_server, start_link, [persian_node:event_server_name()]},
                                    permanent,
                                    5000,
                                    worker,
