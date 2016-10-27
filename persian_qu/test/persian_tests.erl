@@ -47,6 +47,7 @@ werl -sname persian_event_node1@localhost -pa _build\default\lib\persian_event\e
 erl -sname persian_qu_node0@localhost -pa _build/default/lib/*/ebin
 erl -sname persian_qu_node1@localhost -pa _build/default/lib/*/ebin
 erl -sname persian_event_node0@localhost -pa _build/default/lib/*/ebin
+erl -sname persian_event_node1@localhost -pa _build/default/lib/*/ebin
 
 http://127.0.0.1:3000/persian/enqueue?msgId=1&client=1
 

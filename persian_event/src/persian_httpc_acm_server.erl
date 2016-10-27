@@ -17,7 +17,7 @@ init([]) ->
 %% API functions
 %%====================================================================
 start_link(Name) -> gen_server:start_link({local, Name}, ?MODULE, [], []).
-stop(Pid)    -> gen_server:call(Pid, {terminate}).
+stop(Pid)        -> gen_server:call(Pid, {terminate}).
 process_event(Pid, Client, MsgId, Msg, Timeout) ->
   gen_server:call(Pid, {process_event, Client, MsgId, Msg}, Timeout).
 
