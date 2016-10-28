@@ -28,13 +28,13 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, [{persian_node:event_server_sup_name(),
+    {ok, { {one_for_all, 0, 1}, [{persian_event_nodem:event_server_sup_name(),
                                   {persian_event_server_sup, start_link, []},
                                   permanent,
                                   5000,
                                   supervisor,
                                   [persian_event_server_sup]},
-                                 {persian_node:event_httpc_acm_sup_name(),
+                                 {persian_event_nodem:event_httpc_acm_sup_name(),
                                   {persian_httpc_acm_server_sup, start_link, []},
                                   permanent,
                                   5000,

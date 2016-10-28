@@ -15,6 +15,8 @@
 
 init([]) ->
   lager:info("- Starting persian_qu_server"),
+  net_kernel:connect_node(persian_qu_nodem:event_node(<<"0">>)),
+  net_kernel:connect_node(persian_qu_nodem:event_node(<<"1">>)),
   {ok, orddict:new()}.
 
 %%====================================================================
@@ -123,13 +125,13 @@ dequeue(Client, MapQueue) ->
 
 %%---- NEW_MSG ------------------------------------
 notify_new_msg(Client) ->
-  rpc:call(persian_node:event_node(Client), persian_event_server, notify_new_msg, [event_server_name(Client), Client]).
+  persian_event_server:notify_new_msg(event_server_name(Client), Client).
 %%---- NO_MSG ------------------------------------
 notify_no_msg(Client) ->
-  rpc:call(persian_node:event_node(Client), persian_event_server, notify_no_msg, [event_server_name(Client), Client]).
+  persian_event_server:notify_no_msg(event_server_name(Client), Client).
 %%---- PROCESS_MSG ------------------------------------
 process_msg(Client, Msg) ->
-  rpc:call(persian_node:event_node(Client), persian_event_server, process_msg, [event_server_name(Client), Client, Msg]).
+  persian_event_server:process_msg(event_server_name(Client), Client, Msg).
 
 event_server_name(Client) ->
-  persian_node:event_server_name(persian_node:event_node(Client)).
+  persian_qu_nodem:event_server_name(persian_qu_nodem:event_node(Client)).
