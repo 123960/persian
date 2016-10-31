@@ -1,0 +1,20 @@
+{application, persian_persistance,
+ [{description, "Persian persistance module"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, { persian_persistance, []}},
+  {applications, [kernel, stdlib]},
+  {env,[]},
+  {modules, []},
+  {maintainers, ["vinicius.a.ribeiro"]},
+  {licenses, []},
+  {links, []},
+  {lager, [
+     {log_root, "./persian/logs/persian_persistance_logs/"},
+     {handlers, [
+       {lager_console_backend, info},
+       {lager_file_backend, [{file, "persian_persistance_error.log"}, {level, error}]},
+       {lager_file_backend, [{file, "persian_persistance_console.log"}, {level, info}]}
+     ]}
+   ]}
+ ]}.
