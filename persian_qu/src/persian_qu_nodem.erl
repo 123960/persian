@@ -5,7 +5,7 @@
 -module(persian_qu_nodem).
 -export([event_httpc_acm_sup_name/0,event_server_sup_name/0,event_httpc_acm_server_name/0,
          event_server_name/0, event_server_name/1, qu_httpd_api_sup_name/0, qu_server_sup_name/0, qu_httpd_api_name/0,
-         api_node_port/0, qu_server_name/0, qu_server_name/1, qu_node/1,event_node/1]).
+         api_node_port/0, qu_server_name/0, qu_server_name/1, qu_node/1,event_node/1, persistance_node/1]).
 
 %%====================================================================
 %% API functions
@@ -85,6 +85,12 @@ event_node(Client) ->
   case orddict:find(pf(Client), ENodes) of
     {ok, Node}    -> Node;
     error         -> persian_event_node0@localhost
+  end.
+persistance_node(Client) ->
+  {ok, PNodes} = application:get_env(persian_qu, persistance_nodes_per_pf),
+  case orddict:find(pf(Client), PNodes) of
+    {ok, Node}    -> Node;
+    error         -> persian_persistance_node0@localhost
   end.
 
 %%====================================================================

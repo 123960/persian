@@ -28,7 +28,8 @@
         {qu_nodes_per_pf, [{0, persian_qu_node0@localhost},
                            {1, persian_qu_node1@localhost}]},
         {event_nodes_per_pf, [{0, persian_event_node0@localhost},
-                              {1, persian_event_node1@localhost}]}
+                              {1, persian_event_node1@localhost}]},
+        {persistance_nodes_per_pf, [{0, persian_persistance_node0@localhost}]}
         ]},
   {modules, []},
   {maintainers, ["vinicius.a.ribeiro"]},

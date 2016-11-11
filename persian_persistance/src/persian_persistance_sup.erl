@@ -9,12 +9,17 @@
 %%====================================================================
 %% API functions
 %%====================================================================
-start_link() -> supervisor:start_link(?MODULE, []).
+start_link() -> supervisor:start_link({local, ?MODULE}, ?MODULE, []).
 
 %%====================================================================
 %% Supervisor callbacks
 %%====================================================================
-init([]) ->{ok, {{one_for_one, 1, 1}, []}}.
+init([]) -> {ok, {{one_for_one, 5, 5}, [{persian_persistance_node0,
+                                          {persian_persistance_server, start_link, [persian_persistance_node0@localhost]},
+                                           permanent,
+                                           5000,
+                                           worker,
+                                           [persian_persistance_server]}]}}.
 
 %%====================================================================
 %% Internal functions
